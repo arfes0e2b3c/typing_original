@@ -1,17 +1,17 @@
 <template>
   <div class="background">
-  <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
     <div class="container">
       <i id="icon" class="fas fa-times-circle" @click="closeGame"></i>
       <div class="quiz-container" v-show="showQuiz">
         <p>{{ this.quiz[0].showStr }}</p>
         <p>{{ this.quiz[0].inputStr }}</p>
-        <input type="text" v-model="answer" id="input" ref="input">
+        <input type="text" v-model="answer" id="input" ref="input" spellcheck="false" autocomplete="off">
         <p class="answer-per-quiz"> {{ answerNum }} / {{ quizNum }}</p>
       </div>
       <div class="clear-container" v-show="showClear">
         <h2>Clear!</h2>
-        <p>ミスタイプ数:{{ missType }}</p>
+        <p>ミスタイプ数：{{ missType }}</p>
+        <p>クリアタイム：{{ showTime }}</p>
         <div class="button-group">
           <button @click="closeGame" class="button1">ゲームを終了する</button>
           <button @click="closeGame" class="button2">ゲームを終了する</button>
@@ -43,11 +43,16 @@ export default {
       barWidth:'',
       showQuiz: true,
       showClear: false,
-      missType: 0
+      missType: 0,
+      startTime: 0,
+      endTime: 0,
+      time: 0,
+      showTime: '',
     }
   },
   methods:{
     gameStart() {
+      this.getStartTime()
       this.getQuiz()
       this.closeClear()
       this.openQuiz()
@@ -66,6 +71,8 @@ export default {
       this.showClear = false
     },
     gameClear() {
+      this.getEndTime()
+      this.calcTime()
       this.showQuiz = false
       this.showClear = true
     },
@@ -76,6 +83,24 @@ export default {
       this.$nextTick(() => {
         this.$refs["input"].focus()
       })
+    },
+    getStartTime() {
+      this.startTime = new Date()
+      console.log(this.startTime)
+    },
+    getEndTime() {
+      this.endTime = new Date()
+      console.log(this.endTime)
+    },
+    calcTime() {
+      this.time = this.endTime - this.startTime
+      let m = Math.floor(this.time / 60000)
+      let s = Math.floor(this.time % 60000 / 1000)
+      let ms = this.time % 1000
+      m = ('0' + m).slice(-2)
+      s = ('0' + s).slice(-2)
+      ms = ('00' + ms).slice(-3).slice(0, 2)
+      this.showTime = m + ':' + s + ':' + ms
     }
   },
   props:{
@@ -144,7 +169,7 @@ export default {
 }
 .progressBox{
   position: absolute;
-  top:300px;
+  top:350px;
   left: 50%;
   width: 50%;
   height: 30px;

@@ -15,7 +15,7 @@
           </div>
           <div class="form-group">
             <label>入力文字列</label><br>
-            <input type="text" class="form-control" aria-label="入力文字列" v-model="form.inputStr">
+            <input type="text" class="form-control" aria-label="入力文字列" v-model="form.inputStr" spellcheck="false">
           </div>
           <div class="button-group">
             <button type="submit" class="button1" @click.prevent="toRegister">保存して新規登録</button>

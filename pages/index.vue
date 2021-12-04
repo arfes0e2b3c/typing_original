@@ -1,6 +1,7 @@
 <template class="body">
   <div>
     <div class="container">
+      <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
       <h1>タイピングゲーム</h1>
       <game-start
         @openRegister="openRegister"
@@ -49,7 +50,9 @@ export default {
         showGame: false,
         quizNum: 0,
         showEdit: false,
-        dataNum: 0
+        dataNum: 0,
+        data: [],
+        key: 0
       }
     },
     methods:{
@@ -72,6 +75,13 @@ export default {
       },
       openEdit() {
         this.showEdit = true
+        //データにkeyを追加する時に使った。
+        // this.data = JSON.parse(localStorage.getItem("dataList"))
+        // this.data.forEach(element => {
+        //   element.key = this.key
+        //   this.key++
+        // })
+        // localStorage.setItem('dataList', JSON.stringify(this.data))
       },
       closeEdit() {
         this.showEdit = false
