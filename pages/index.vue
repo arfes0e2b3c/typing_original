@@ -252,6 +252,7 @@ h1{
   width: 150px;
   height: 40px;
   margin: 0 auto;
+  margin-bottom: 10px;
   transform-style: preserve-3d;
   perspective: 60000px;
   transform-origin: 50% 50% 20px;
