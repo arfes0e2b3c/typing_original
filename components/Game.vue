@@ -47,7 +47,7 @@ export default {
       startTime: 0,
       endTime: 0,
       time: 0,
-      showTime: '',
+      showTime: ''
     }
   },
   methods:{

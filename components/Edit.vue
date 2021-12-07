@@ -112,6 +112,9 @@ export default {
       if(!(num === 1 && this.editKeyData === this.dataList.length - 1) && !(num === -1 && this.editKeyData === 0)) {
         this.errors = []
         this.editKeyData += num
+        this.$nextTick(() => {
+          this.$refs["input"].focus()
+        })
       }
     },
     validateForm() {
