@@ -1,26 +1,19 @@
 <template>
-  <div class="container">
-    <div class="start-container">
-      <div class="button-group">
-        <button class="button1" @click="openRegister">新規問題登録</button>
-        <button class="button2" @click="openRegister">新規問題登録</button>
-        <button class="button3" @click="openRegister"></button>
-        <button class="button4" @click="openRegister"></button>
-      </div>
-      <div class="button-group">
-        <button class="button1" @click="openEdit">問題確認・編集</button>
-        <button class="button2" @click="openEdit">問題確認・編集</button>
-        <button class="button3" @click="openEdit"></button>
-        <button class="button4" @click="openEdit"></button>
-      </div>
-      <h2 v-cloak>出題数(最大{{ dataNum }}問)</h2>
-      <input type="text" v-model="quizNum"><br>
-      <div class="button-group">
-        <button @click="gameStart" class="game-start-button button1">ゲームスタート</button>
-        <button @click="gameStart" class="game-start-button button2">ゲームスタート</button>
-        <button @click="gameStart" class="game-start-button button3"></button>
-        <button @click="gameStart" class="game-start-button button4"></button>
-      </div>
+  <div class="game-start-container">
+    <h1>タイピングゲーム</h1>
+    <slot name="button-slot">
+      buttons
+    </slot>
+    <h2 v-cloak>出題数(最大{{ dataNum }}問)</h2>
+    <input type="text" v-model="quizNum" ref="input"><br>
+    <div class="button-group">
+      <button class="button1" @click="gameStart">ゲームスタート</button>
+      <button class="button2" @click="gameStart">ゲームスタート</button>
+      <button class="button3" @click="gameStart"></button>
+      <button class="button4" @click="gameStart"></button>
+    </div>
+    <div class="errors">
+      <p v-for="error in errors" :key="error.key">{{ error.mes }}</p>
     </div>
   </div>
 </template>
@@ -29,23 +22,38 @@ export default{
   data(){
     return{
       quizNum: 1,
-      dataNum: ''
+      dataNum: 0,
+      errors: []
     }
   },
   methods:{
-    openRegister(){
-      this.$emit('openRegister')
-    },
-    openEdit(){
-      this.$emit('openEdit')
-    },
     gameStart(){
-      this.$emit('gameStart')
-      this.$emit('quizNum', this.quizNum)
+      this.checkQuizNum()
+      if(this.errors.length === 0) {
+        //!this.errorsだと判定できなかった
+        this.$emit('gameStart')
+        this.$emit('quizNum', this.quizNum)
+      }
+    },
+    checkQuizNum() {
+      this.errors = []
+      if(this.quizNum < 1) {
+        this.errors.push({mes: '出題数は１以上を入力してください', key: 1})
+      }
+      if(this.quizNum > this.dataNum) {
+        this.errors.push({mes: '出題数が最大値を超過しています', key: 2})
+      }
+      if(this.dataNum == 0) {
+        this.errors.push({mes: '問題が登録されていません', key: 3})
+      }
     }
   },
   mounted(){
-    this.dataNum =  JSON.parse(localStorage.getItem("dataList")).length - 0
+    this.$nextTick(() => {
+      this.dataNum =  JSON.parse(localStorage.getItem("dataList")).length - 0
+      this.$refs["input"].focus()
+      this.$refs["input"].setSelectionRange(1, 1)
+    })
   },
   props:{
     sentDataNum:{
@@ -55,17 +63,13 @@ export default{
   watch:{
     sentDataNum:function() {
       this.dataNum = this.sentDataNum
-    },
-    quizNum:function() {
-      if(this.quizNum > this.dataNum){
-        this.quizNum = this.dataNum
-      }
     }
   }
 }
 </script>
 <style scoped>
-.container{
+.game-start-container{
+  position:absolute;
   width:100%;
   text-align: center;
 }

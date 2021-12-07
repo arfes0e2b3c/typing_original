@@ -1,44 +1,44 @@
 <template>
-  <div class="background">
-    <div class="container">
-      <i id="icon" class="fas fa-times-circle" @click="closeRegister"></i>
-      <h1>新規問題登録</h1>
-      <div class="error">
-        {{ this.errors[0]}}<br>
-        {{ this.errors[1]}}
-      </div>
-      <div class="register-container">
-        <form action="">
-          <div class="form-group">
-            <label>表示文字列</label><br>
-            <input ref="input" type="text" class="form-control" aria-label="表示文字列" v-model="form.showStr">
-          </div>
-          <div class="form-group">
-            <label>入力文字列</label><br>
-            <input type="text" class="form-control" aria-label="入力文字列" v-model="form.inputStr" spellcheck="false">
-          </div>
-          <div class="button-group">
-            <button type="submit" class="button1" @click.prevent="toRegister">保存して新規登録</button>
-            <button type="submit" class="button2" @click.prevent="toRegister">保存して新規登録</button>
-            <button type="submit" class="button3" @click.prevent="toRegister"></button>
-            <button type="submit" class="button4" @click.prevent="toRegister"></button>
-          </div>
-          <br>
-          <div class="button-group">
-            <button type="submit" class="button1" @click.prevent="toRegisterClose">保存</button>
-            <button type="submit" class="button2" @click.prevent="toRegisterClose">保存</button>
-            <button type="submit" class="button3" @click.prevent="toRegisterClose"></button>
-            <button type="submit" class="button4" @click.prevent="toRegisterClose"></button>
-          </div>
-          <br>
-          <div class="button-group">
-            <button class="button1" @click.prevent="closeRegister">閉じる</button>
-            <button class="button2" @click.prevent="closeRegister">閉じる</button>
-            <button class="button3" @click.prevent="closeRegister"></button>
-            <button class="button4" @click.prevent="closeRegister"></button>
-          </div>
-        </form>
-      </div>
+  <div class="register-container">
+    <h1>新規問題登録</h1>
+    <slot name="button-slot">
+      buttons
+    </slot>
+    <div class="errors">
+      <p v-for="error in errors" :key="error.key">
+        {{ error.text }}
+      </p>
+    </div>
+    <div class="register-container">
+      <form action="">
+        <div class="form-group">
+          <label for="show-str">表示文字列</label><br>
+          <input
+            ref="input"
+            type="text"
+            class="form-control"
+            aria-label="表示文字列"
+            v-model="form.showStr"
+            id="show-str">
+        </div>
+        <div class="form-group">
+          <label for="input-str">入力文字列</label><br>
+          <input
+            ref="input2"
+            type="text"
+            class="form-control"
+            aria-label="入力文字列"
+            v-model="form.inputStr"
+            spellcheck="false"
+            id="input-str">
+        </div>
+        <div class="button-group">
+          <button type="submit" class="button1" @click.prevent="toRegister">保存して新規登録</button>
+          <button type="submit" class="button2" @click.prevent="toRegister">保存して新規登録</button>
+          <button type="submit" class="button3" @click.prevent="toRegister"></button>
+          <button type="submit" class="button4" @click.prevent="toRegister"></button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -51,118 +51,89 @@ export default {
       dataList: [],
       form:{
         showStr:'',
-        inputStr:''
+        inputStr:'',
+        key: 0
       },
-      errors:[]
+      errors:[],
+      key: 0
     }
   },
   methods:{
-    closeRegister(){
-      let that = this
-      setTimeout(function(){
-        that.errors = []
-        that.form.showStr = ''
-        that.form.inputStr = ''
-      },500)
-      this.$emit('closeRegister')
-    },
     validateForm() {
-      if(!this.form.showStr) this.errors.push('表示文字列を入力してください。')
-      if(!this.form.inputStr) this.errors.push('入力文字列を入力してください。')
+      if(!this.form.showStr) this.errors.push({text:'表示文字列を入力してください。', key: 1})
+      if(!this.form.inputStr) this.errors.push({text:'入力文字列を入力してください。', key: 2})
     },
     toRegister(){
       this.errors = []
       this.validateForm()
       if(this.errors.length === 0) {
         this.dataList =  JSON.parse(localStorage.getItem("dataList"))
+        this.form.key = this.dataList.length - 1
         this.dataList.push(this.form)
+        this.setKey()
         this.itemNum++
         this.$emit('setDataNum', this.dataList.length)
         localStorage.setItem('dataList',JSON.stringify(this.dataList))
         this.form.showStr = ''
         this.form.inputStr = ''
+      }else if(this.errors[0].key === 2) {
+        this.$nextTick(() => {
+          this.$refs["input2"].focus()
+        })
+      }else{
+        this.$nextTick(() => {
+          this.$refs["input"].focus()
+        })
       }
-      this.$nextTick(() => {
-      this.$refs["input"].focus()
-      })
-    },
-    toRegisterClose(){
-      if(this.form.showStr && this.form.inputStr) {
-        this.closeRegister()
-      }
-      this.toRegister()
     },
     inputStart() {
       this.$nextTick(() => {
       this.$refs["input"].focus()
       })
+    },
+    setKey() {
+      this.key = 0
+      let that = this
+      this.dataList.forEach(element => {
+        element.key = that.key
+        that.key++
+      })
     }
-  },
-  mounted(){
-    if(!JSON.parse(localStorage.getItem("dataList"))){
-      localStorage.setItem('dataList',JSON.stringify(this.dataList))
-    }
-
   }
 }
 </script>
 
 <style scoped>
-.background{
+.register-container{
   width:100%;
-  height:100%;
-  position:absolute;
-  left: 0;
-  top: 0;
-  background:rgba(0,0,0,0.6);
-}
-.container{
-  width:70%;
-  height:70%;
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  text-align: center;
-  background:#0e2b3c;
-  color:white;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 0 16px #444;
-}
-h1{
-  margin-top:50px;
-}
-.error{
-  color:red;
-}
-#icon{
-  font-size: 4em;
+  height: 300px;
   position: absolute;
-  top: 30px;
-  right: 30px;
-  cursor: pointer;
-  z-index: 1;
+  text-align: center;
 }
-#icon:hover{
-  transition: .5s;
-  transform: rotate(90deg);
+.errors{
+  color:red;
+  height: 56px;
+  margin: 10px auto;
+}
+.errors p{
+  margin: 0;
+}
+.errors p:nth-child(1){
+  padding-bottom: 8px;
 }
 input{
   text-align: center;
-  background: #0e2b3c;
   border: none;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  width: 60%;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  width: 40%;
   height:30px;
-  color: white;
-  font-size: 1.7em;
+  font-size: 2em;
   outline: none;
   transition: .5s;
 }
 input:focus{
-  border-bottom: 1px solid rgba(255,255,255,1);
-  width: 45%;
+  border-bottom: 1px solid rgba(0,0,0,0.8);
+  width: 50%;
 }
 .form-group{
   margin-bottom: 30px;
@@ -183,11 +154,11 @@ button{
   width:150px;
   height:40px;
   background: none;
-  border: 1px solid white;
+  border: 1px solid #333;
   cursor: pointer;
   transition: .5s;
   overflow: hidden;
-  color: white;
+  color: #333;
 }
 .button2{
   transform: translateY(-50%)translateZ(20px)rotateX(-90deg);

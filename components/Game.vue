@@ -13,16 +13,16 @@
         <p>ミスタイプ数：{{ missType }}</p>
         <p>クリアタイム：{{ showTime }}</p>
         <div class="button-group">
-          <button @click="closeGame" class="button1">ゲームを終了する</button>
-          <button @click="closeGame" class="button2">ゲームを終了する</button>
-          <button @click="closeGame" class="button3"></button>
-          <button @click="closeGame" class="button4"></button>
+          <button class="button1" @click="closeGame">ゲームを終了する</button>
+          <button class="button2" @click="closeGame">ゲームを終了する</button>
+          <button class="button3" @click="closeGame"></button>
+          <button class="button4" @click="closeGame"></button>
         </div>
         <div class="button-group">
-          <button @click="gameStart" class="button1">もう一度</button>
-          <button @click="gameStart" class="button2">もう一度</button>
-          <button @click="gameStart" class="button3"></button>
-          <button @click="gameStart" class="button4"></button>
+          <button class="button1" @click="gameStart">もう一度</button>
+          <button class="button2" @click="gameStart">もう一度</button>
+          <button class="button3" @click="gameStart"></button>
+          <button class="button4" @click="gameStart"></button>
         </div>
       </div>
       <div class="progressBox">

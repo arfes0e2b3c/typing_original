@@ -1,21 +1,43 @@
 <template>
   <div class="background">
-    <div class="container">
+    <div class="edit-container">
       <i id="icon" class="fas fa-times-circle" @click="closeEdit"></i>
-      <h2>問題確認・編集</h2>
-      <table>
-        <tr v-for="data in splicedList" :key="data.key">
-          <td>{{ data.key + 1 }}</td>
-          <td>{{ data.showStr }}</td>
-          <td>{{ data.inputStr }}</td>
-          <td><button>編集</button></td>
-          <td><button>削除</button></td>
-        </tr>
-      </table>
-      <div class="move">
-        <i class="fas fa-chevron-left left" @click="moveQuiz(-1)"></i>
-        <i class="fas fa-chevron-right right" @click="moveQuiz(1)"></i>
-      </div>
+      <!-- <div class="error">
+        {{ this.errors[0]}}<br>
+        {{ this.errors[1]}}
+      </div> -->
+      <form action="">
+        <div class="form-group">
+          <label for="edit-show-str">表示文字列</label><br>
+          <input ref="input" type="text" class="form-control" aria-label="表示文字列" v-model="dataList[editKey].showStr" value="s" id="edit-show-str">
+        </div>
+        <div class="form-group">
+          <label for="edit-input-str">入力文字列</label><br>
+          <input type="text" class="form-control" aria-label="入力文字列" v-model="dataList[editKey].inputStr" spellcheck="false" id="edit-input-str">
+        </div>
+        <div class="buttons">
+          <div class="button-group">
+            <button type="submit" class="button1" @click.prevent="toRegisterClose">保存</button>
+            <button type="submit" class="button2" @click.prevent="toRegisterClose">保存</button>
+            <button type="submit" class="button3" @click.prevent="toRegisterClose"></button>
+            <button type="submit" class="button4" @click.prevent="toRegisterClose"></button>
+          </div>
+          <br>
+          <div class="button-group">
+            <button class="button1" @click.prevent="closeEdit">閉じる</button>
+            <button class="button2" @click.prevent="closeEdit">閉じる</button>
+            <button class="button3" @click.prevent="closeEdit"></button>
+            <button class="button4" @click.prevent="closeEdit"></button>
+          </div>
+          <br>
+          <div class="button-group">
+            <button class="button1" @click.prevent="deleteQuiz">削除</button>
+            <button class="button2" @click.prevent="deleteQuiz">削除</button>
+            <button class="button3" @click.prevent="deleteQuiz"></button>
+            <button class="button4" @click.prevent="deleteQuiz"></button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -24,36 +46,57 @@
 export default {
   data() {
     return{
-      dataList: [],
-      splicedList: [],
-      quizNum: 0
+      quizKey: 0
+    }
+  },
+  props:{
+    editKey:{
+    },
+    dataList:{
+      type: Array
     }
   },
   methods:{
+    inputStart() {
+      this.$nextTick(() => {
+      this.$refs["input"].focus()
+      })
+    },
     closeEdit() {
       this.$emit('closeEdit')
     },
-    moveQuiz(sign) {
-      if(!(this.quizNum === 0 && sign === -1) && !(this.quizNum === this.dataList.length - this.dataList.length % 10 && sign === 1)){
-        this.quizNum += 10 * sign
-        this.modifyQuiz()
+    toRegisterClose() {
+      this.emitDataList()
+      localStorage.setItem('dataList', JSON.stringify(this.dataList))
+      this.closeEdit()
+    },
+    deleteQuiz() {
+      if(confirm('本当に削除しますか？')){
+        this.closeEdit()
+        this.dataList.splice(this.editKey, 1)
+        this.$emit('setDataNum', this.dataList.length)
+        this.emitDataList()
+        localStorage.setItem('dataList', JSON.stringify(this.dataList))
+      }else{
+        this.inputStart()
       }
     },
-    modifyQuiz() {
-      this.splicedList = this.dataList.slice(this.quizNum, this.quizNum + 10)
-      this.splicedList.forEach(e => {
-        if(e.showStr.length > 10){
-          e.showStr = e.showStr.slice(0, 10) + "..."
-        }
-        if(e.inputStr.length > 15){
-          e.inputStr = e.inputStr.slice(0, 10) + "..."
-        }
+    emitDataList() {
+      this.$emit('emitDataList', this.dataList)
+    },
+    setKey() {
+      this.quizKey = 0
+      let that = this
+      this.dataList.map(element => {
+        element.key = that.quizKey
+        that.quizKey++
       })
     }
   },
-  mounted(){
-    this.dataList = JSON.parse(localStorage.getItem("dataList"))
-    this.modifyQuiz()
+  watch: {
+    dataList: function() {
+      this.setKey()
+    }
   }
 }
 </script>
@@ -67,7 +110,7 @@ export default {
   top: 0;
   background:rgba(0,0,0,0.6);
 }
-.container{
+.edit-container{
   width:70%;
   height:70%;
   position:absolute;
@@ -93,63 +136,77 @@ export default {
   transition: .5s;
   transform: rotate(90deg);
 }
-table{
-  margin: 40px auto 0;
-  width: 80%;
+form{
+  margin-top:90px;
 }
-tr{
-  height: 35px;
+p{
+  color: white;
 }
-.move{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 20px;
+input{
+  text-align: center;
+  background: #0e2b3c;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  width: 60%;
+  height:30px;
+  color: white;
+  font-size: 1.7em;
+  outline: none;
+  transition: .5s;
+  margin-top: 30px;
 }
-.move i{
-  margin-top: 20px;
-  /* margin-left: 20px; */
-  font-size:3em;
-  cursor: pointer;
+input:focus{
+  border-bottom: 1px solid rgba(255,255,255,1);
+  width: 45%;
 }
-.right:hover{
-  animation: moveRight .5s;
+h1{
+  margin-top:50px;
 }
-@keyframes moveRight{
-  0%{
-    transform: translateX(0);
-  }
-  50%{
-    transform: translateX(5px);
-  }
-  100%{
-    transform: translateX(0);
-  }
+.error{
+  color:red;
 }
-.left:hover{
-  animation: moveLeft .5s;
+.form-group{
+  margin-bottom: 30px;
 }
-@keyframes moveLeft{
-  0%{
-    transform: translateX(0);
-  }
-  50%{
-    transform: translateX(-5px);
-  }
-  100%{
-    transform: translateX(0);
-  }
+.buttons{
+  width: 60%;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+.button-group{
+  position: relative;
+  width: 150px;
+  height: 40px;
+  margin: 8px auto;
+  transform-style: preserve-3d;
+  perspective: 60000px;
+  transform-origin: 50% 50% 20px;
 }
 button{
-  width:100%;
-  height: 2em;
-  background-color: #0e2b3c;
-  border: none;
-  color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width:150px;
+  height:40px;
+  background: none;
+  border: 1px solid white;
+  cursor: pointer;
   transition: .5s;
-  padding: 5px auto;
+  overflow: hidden;
+  color: white;
 }
-button:hover{
-  background-color: rgba(115,143,160);
+.button2{
+  transform: translateY(-50%)translateZ(20px)rotateX(-90deg);
+}
+.button3{
+  transform: translateY(50%)translateZ(20px)rotateX(90deg);
+}
+.button4{
+  transform: translateY(0)translateZ(40px)rotateX(0deg);
+}
+.button-group:hover{
+  transform: rotateX(90deg);
+  transition: .5s;
 }
 </style>
