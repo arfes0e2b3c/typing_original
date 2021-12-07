@@ -17,14 +17,14 @@
                 <button class="button4" @click="openStartGame"></button>
               </div>
               <div class="button-group">
-                <button class="button1" @click="openRegister">Register</button>
-                <button class="button2" @click="openRegister">Register</button>
+                <button class="button1" @click="openRegister">新規問題登録</button>
+                <button class="button2" @click="openRegister">新規問題登録</button>
                 <button class="button3" @click="openRegister"></button>
                 <button class="button4" @click="openRegister"></button>
               </div>
               <div class="button-group">
-                <button class="button1" @click="openList">List</button>
-                <button class="button2" @click="openList">List</button>
+                <button class="button1" @click="openList">問題確認・編集</button>
+                <button class="button2" @click="openList">問題確認・編集</button>
                 <button class="button3" @click="openList"></button>
                 <button class="button4" @click="openList"></button>
               </div>
@@ -198,6 +198,7 @@ export default {
 <style lang="scss">
 *{
   margin: 0;
+  color: #333;
 }
 h1{
   margin: 48px auto 16px;

@@ -37,11 +37,16 @@ export default{
     },
     checkQuizNum() {
       this.errors = []
+      if(isNaN(this.quizNum)){
+        this.errors.push({mes: '数値以外が入力されています', key: 0})
+      }
       if(this.quizNum < 1) {
         this.errors.push({mes: '出題数は１以上を入力してください', key: 1})
+        this.quizNum = 1
       }
       if(this.quizNum > this.dataNum) {
         this.errors.push({mes: '出題数が最大値を超過しています', key: 2})
+        this.quizNum = this.dataNum
       }
       if(this.dataNum == 0) {
         this.errors.push({mes: '問題が登録されていません', key: 3})
@@ -120,5 +125,11 @@ input{
 input:focus{
   border-bottom: 1px solid rgba(0,0,0,0.8);
   width: 10%;
+}
+.errors{
+  margin-top: 20px;
+}
+.errors p{
+  color: red !important;
 }
 </style>

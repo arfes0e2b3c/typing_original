@@ -131,6 +131,7 @@ export default {
   right: 30px;
   cursor: pointer;
   z-index: 1;
+  color: white;
 }
 #icon:hover{
   transition: .5s;

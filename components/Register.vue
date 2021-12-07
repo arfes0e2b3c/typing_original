@@ -158,7 +158,6 @@ button{
   cursor: pointer;
   transition: .5s;
   overflow: hidden;
-  color: #333;
 }
 .button2{
   transform: translateY(-50%)translateZ(20px)rotateX(-90deg);

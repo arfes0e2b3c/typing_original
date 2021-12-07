@@ -132,6 +132,9 @@ export default {
 </script>
 
 <style scoped>
+*{
+  color:white !important;
+}
 .background{
   width:100%;
   height:100%;
@@ -149,7 +152,6 @@ export default {
   transform:translate(-50%,-50%);
   text-align: center;
   background:#0e2b3c;
-  color:white;
   justify-content: center;
   align-items: center;
   box-shadow: 0 0 16px #444;

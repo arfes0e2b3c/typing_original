@@ -178,7 +178,6 @@ td{
   bottom: 0;
   left: 50%;
   transform:translateX(-50%);
-  color: #333;
 }
 .move i{
   margin-top: 20px;
@@ -216,7 +215,6 @@ td{
 .td-button{
   background: none;
   border: 1px solid rgba(0,0,0,0.1);
-  color: #333;
   transition: .5s;
   margin: 10px 2px;
   cursor: pointer;
