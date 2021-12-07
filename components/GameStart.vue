@@ -6,7 +6,7 @@
     </slot>
     <h2 v-cloak>出題数(最大{{ dataNum }}問)</h2>
     <input type="text" v-model="quizNum" ref="input"><br>
-    <div class="button-group">
+    <div class="button-group game-start-button">
       <button class="button1" @click="gameStart">ゲームスタート</button>
       <button class="button2" @click="gameStart">ゲームスタート</button>
       <button class="button3" @click="gameStart"></button>
@@ -82,10 +82,12 @@ export default{
   position: relative;
   width: 150px;
   height: 40px;
-  margin: 30px auto 0;
   transform-style: preserve-3d;
   perspective: 60000px;
   transform-origin: 50% 50% 20px;
+}
+.game-start-button{
+  margin: 30px auto 0;
 }
 button{
   position: absolute;
