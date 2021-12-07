@@ -34,6 +34,14 @@
       </transition>
 
       <transition name="fade">
+        <game
+          v-show="showGame"
+          ref="Game"
+          :quizNum="quizNum"
+          @closeGame="closeGame"/>
+      </transition>
+
+      <transition name="fade">
         <register
           v-show="showRegister"
           ref="Register"
@@ -47,14 +55,14 @@
                 <button class="button4" @click="openStartGame"></button>
               </div>
               <div class="button-group">
-                <button class="button1" @click="openRegister">Register</button>
-                <button class="button2" @click="openRegister">Register</button>
+                <button class="button1" @click="openRegister">新規問題登録</button>
+                <button class="button2" @click="openRegister">新規問題登録</button>
                 <button class="button3" @click="openRegister"></button>
                 <button class="button4" @click="openRegister"></button>
               </div>
               <div class="button-group">
-                <button class="button1" @click="openList">List</button>
-                <button class="button2" @click="openList">List</button>
+                <button class="button1" @click="openList">問題確認・編集</button>
+                <button class="button2" @click="openList">問題確認・編集</button>
                 <button class="button3" @click="openList"></button>
                 <button class="button4" @click="openList"></button>
               </div>
@@ -63,13 +71,6 @@
         </register>
       </transition>
 
-      <transition name="fade">
-        <game
-          v-show="showGame"
-          ref="Game"
-          :quizNum="quizNum"
-          @closeGame="closeGame"/>
-      </transition>
 
       <transition name="fade">
         <list
@@ -85,14 +86,14 @@
                 <button class="button4" @click="openStartGame"></button>
               </div>
               <div class="button-group">
-                <button class="button1" @click="openRegister">Register</button>
-                <button class="button2" @click="openRegister">Register</button>
+                <button class="button1" @click="openRegister">新規問題登録</button>
+                <button class="button2" @click="openRegister">新規問題登録</button>
                 <button class="button3" @click="openRegister"></button>
                 <button class="button4" @click="openRegister"></button>
               </div>
               <div class="button-group">
-                <button class="button1" @click="openList">List</button>
-                <button class="button2" @click="openList">List</button>
+                <button class="button1" @click="openList">問題確認・編集</button>
+                <button class="button2" @click="openList">問題確認・編集</button>
                 <button class="button3" @click="openList"></button>
                 <button class="button4" @click="openList"></button>
               </div>
@@ -242,6 +243,7 @@ h1{
 }
 .buttons{
   width: 50%;
+  min-height: 70px;
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
