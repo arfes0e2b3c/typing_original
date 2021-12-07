@@ -163,6 +163,9 @@ export default {
   left:50%;
   transform:translateX(-50%);
 }
+.quiz-container{
+  top: 150px;
+}
 .quiz-container p{
   font-size:1.3em;
 }

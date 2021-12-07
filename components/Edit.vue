@@ -2,18 +2,19 @@
   <div class="background">
     <div class="edit-container">
       <i id="icon" class="fas fa-times-circle" @click="closeEdit"></i>
-      <!-- <div class="error">
-        {{ this.errors[0]}}<br>
-        {{ this.errors[1]}}
-      </div> -->
+      <div class="errors">
+        <p v-for="error in errors" :key="error.key">
+        {{ error.text }}
+        </p>
+      </div>
       <form action="">
         <div class="form-group">
           <label for="edit-show-str">表示文字列</label><br>
-          <input ref="input" type="text" class="form-control" aria-label="表示文字列" v-model="dataList[editKey].showStr" value="s" id="edit-show-str">
+          <input ref="input" type="text" class="form-control" aria-label="表示文字列" v-model="dataList[editKeyData].showStr" value="s" id="edit-show-str">
         </div>
         <div class="form-group">
           <label for="edit-input-str">入力文字列</label><br>
-          <input type="text" class="form-control" aria-label="入力文字列" v-model="dataList[editKey].inputStr" spellcheck="false" id="edit-input-str">
+          <input ref="input2" type="text" class="form-control" aria-label="入力文字列" v-model="dataList[editKeyData].inputStr" spellcheck="false" id="edit-input-str">
         </div>
         <div class="buttons">
           <div class="button-group">
@@ -38,6 +39,8 @@
           </div>
         </div>
       </form>
+      <i class="fas fa-chevron-left left" @click="moveQuiz(-1)"></i>
+      <i class="fas fa-chevron-right right" @click="moveQuiz(1)"></i>
     </div>
   </div>
 </template>
@@ -46,7 +49,9 @@
 export default {
   data() {
     return{
-      quizKey: 0
+      quizKey: 0,
+      errors: [],
+      editKeyData: this.editKey
     }
   },
   props:{
@@ -66,9 +71,20 @@ export default {
       this.$emit('closeEdit')
     },
     toRegisterClose() {
-      this.emitDataList()
-      localStorage.setItem('dataList', JSON.stringify(this.dataList))
-      this.closeEdit()
+      this.validateForm()
+      if(this.errors.length === 0) {
+        this.emitDataList()
+        localStorage.setItem('dataList', JSON.stringify(this.dataList))
+        this.closeEdit()
+      }else if(this.errors[0].key === 2) {
+        this.$nextTick(() => {
+          this.$refs["input2"].focus()
+        })
+      }else{
+        this.$nextTick(() => {
+          this.$refs["input"].focus()
+        })
+      }
     },
     deleteQuiz() {
       if(confirm('本当に削除しますか？')){
@@ -91,6 +107,17 @@ export default {
         element.key = that.quizKey
         that.quizKey++
       })
+    },
+    moveQuiz(num) {
+      if(!(num === 1 && this.editKeyData === this.dataList.length - 1) && !(num === -1 && this.editKeyData === 0)) {
+        this.errors = []
+        this.editKeyData += num
+      }
+    },
+    validateForm() {
+      this.errors = []
+      if(!this.dataList[this.editKeyData].showStr) this.errors.push({text:'表示文字列を入力してください。', key: 1})
+      if(!this.dataList[this.editKeyData].inputStr) this.errors.push({text:'入力文字列を入力してください。', key: 2})
     }
   },
   watch: {
@@ -163,11 +190,20 @@ input:focus{
 h1{
   margin-top:50px;
 }
-.error{
+.errors{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 20px;
+}
+.errors p{
   color:red;
 }
 .form-group{
   margin-bottom: 30px;
+}
+.form-group label{
+  color: white;
 }
 .buttons{
   width: 60%;
@@ -209,5 +245,51 @@ button{
 .button-group:hover{
   transform: rotateX(90deg);
   transition: .5s;
+}
+.left{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 40px;
+  font-size: 3em;
+  color: white;
+  cursor: pointer;
+}
+.right{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 40px;
+  font-size: 3em;
+  color: white;
+  cursor: pointer;
+}
+.right:hover{
+  animation: moveRight .5s;
+}
+@keyframes moveRight{
+  0%{
+    transform: translateX(0)translateY(-50%);
+  }
+  50%{
+    transform: translateX(5px)translateY(-50%);
+  }
+  100%{
+    transform: translateX(0)translateY(-50%);
+  }
+}
+.left:hover{
+  animation: moveLeft .5s;
+}
+@keyframes moveLeft{
+  0%{
+    transform: translateX(0)translateY(-50%);
+  }
+  50%{
+    transform: translateX(-5px)translateY(-50%);
+  }
+  100%{
+    transform: translateX(0)translateY(-50%);
+  }
 }
 </style>

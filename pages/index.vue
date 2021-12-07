@@ -243,8 +243,7 @@ h1{
 }
 .buttons{
   width: 50%;
-  min-height: 70px;
-  margin: 0 auto;
+  margin: 30px auto 0;
   display: flex;
   flex-wrap: wrap;
 }
@@ -252,10 +251,11 @@ h1{
   position: relative;
   width: 150px;
   height: 40px;
-  margin: 30px auto 0;
+  margin: 0 auto;
   transform-style: preserve-3d;
   perspective: 60000px;
   transform-origin: 50% 50% 20px;
+  flex-direction: column;
 }
 button{
   position: absolute;

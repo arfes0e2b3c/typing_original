@@ -60,11 +60,11 @@ export default {
   },
   methods:{
     validateForm() {
+      this.errors = []
       if(!this.form.showStr) this.errors.push({text:'表示文字列を入力してください。', key: 1})
       if(!this.form.inputStr) this.errors.push({text:'入力文字列を入力してください。', key: 2})
     },
     toRegister(){
-      this.errors = []
       this.validateForm()
       if(this.errors.length === 0) {
         this.dataList =  JSON.parse(localStorage.getItem("dataList"))
@@ -111,11 +111,11 @@ export default {
   text-align: center;
 }
 .errors{
-  color:red;
   height: 56px;
   margin: 10px auto;
 }
 .errors p{
+  color:red;
   margin: 0;
 }
 .errors p:nth-child(1){
